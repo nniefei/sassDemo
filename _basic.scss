@@ -1,0 +1,333 @@
+// ======================================================================================================================= //
+// ======================================================================================================================= //
+// ======================================================================================================================= //
+// ====                                                                                                               ==== // 
+// ====                                                                                                               ==== // 
+// ====                    Title:    Sass基础文件                                                                     ==== // 
+// ====                    Author:   fei                                                                              ==== //
+// ====                    Date:     2017-11-22                                                                      ==== //
+// ====                    Version:  1.0.3                                                                            ==== //
+// ====                                                                                                               ==== //
+// ====                                                                                                               ==== //
+// ====                                                                                                               ==== //
+// ====                    使用$定义变量                                                                              ==== //
+// ====                                                                                                               ==== //
+// ====                    占位选择器以%标识定义，通过@extend调用                                                     ==== //
+// ====                    如果不调用则不会有任何多余的css文件                                                        ==== //
+// ====                    避免了以前在一些基础的文件中预定义了很多基础的样式                                         ==== //
+// ====                    然后实际应用中不管是否使用了@extend去继承相应的样式，都会解析出来所有的样式                ==== //
+// ====                    使用%符不能传参                                                                            ==== //
+// ====                                                                                                               ==== //
+// ====                    使用@mixin声明混合，可以传递参数，参数名以$符号开始。                                      ==== //
+// ====                    多个参数以逗号分开，也可以给参数设置默认值。                                               ==== //
+// ====                    声明的@mixin通过@include来调用                                                             ==== //
+// ====                                                                                                               ==== //
+// ====                    使用@extend可以实现css样式继承                                                             ==== //
+// ====                                                                                                               ==== //
+// ====                    使用@function来定义一个函数@return返回值                                                   ==== //
+// ====                                                                                                               ==== //
+// ====                    使用@at-root跳出所有上级选择器                                                             ==== //
+// ====                                                                                                               ==== // 
+// ====                                                                                                               ==== // 
+// ======================================================================================================================= //
+// ======================================================================================================================= //
+// ======================================================================================================================= //
+
+
+
+
+
+
+// 变量
+// ========================================================================================================================
+	// 浏览器前缀
+	// -------------------------------------------------------------------
+	$prefix-for-webkit: true !default; 
+	$prefix-for-mozilla: true !default; 
+	$prefix-for-microsoft: true !default; 
+	$prefix-for-opera: true !default; 
+	$prefix-for-spec: true !default; 
+	// 颜色
+	// -------------------------------------------------------------------
+	$green:#4CAF50 !default;
+	$blue:#008CBA !default;
+	$red:#f44336 !default;
+	$gray:#e7e7e7 !default;
+	$black:#555555 !default;
+// ========================================================================================================================
+
+
+
+
+
+
+// 常用配置
+// ========================================================================================================================
+// 浏览器前缀选择添加
+// -------------------------------------------------------------------
+@mixin fei-prefixer ($property, $value, $prefixes) { 
+	@each $prefix in $prefixes { 
+		@if $prefix == webkit and $prefix-for-webkit == true { 
+			-webkit-#{$property}: $value; 
+		} 
+		@else if $prefix == moz and $prefix-for-mozilla == true { 
+			-moz-#{$property}: $value; 
+		} 
+		@else if $prefix == ms and $prefix-for-microsoft == true { 
+			-ms-#{$property}: $value; 
+		} 
+		@else if $prefix == o and $prefix-for-opera == true { 
+			-o-#{$property}: $value; 
+		} 
+		@else if $prefix == spec and $prefix-for-spec == true { 
+			#{$property}: $value; 
+		} 
+		@else { 
+			@warn "Unrecognized prefix: #{$prefix}"; 
+		} 
+	} 
+}
+@mixin fei-prefixer-for-special ($property, $value, $prefixes) { 
+	@each $prefix in $prefixes { 
+		@if $prefix == webkit and $prefix-for-webkit == true { 
+			#{$property}: -webkit-#{$value};
+		} 
+		@else if $prefix == moz and $prefix-for-mozilla == true { 
+			#{$property}: -moz-#{$value};
+		} 
+		@else if $prefix == ms and $prefix-for-microsoft == true { 
+			#{$property}: -ms-#{$value};
+		} 
+		@else if $prefix == o and $prefix-for-opera == true { 
+			#{$property}: -o-#{$value};
+		} 
+		@else if $prefix == spec and $prefix-for-spec == true { 
+			#{$property}: #{$value};
+		} 
+		@else { 
+			@warn "Unrecognized prefix: #{$prefix}"; 
+		} 
+	} 
+}
+// keyframe动画浏览器兼容前缀添加
+@mixin fei-prefixer-for-keyframes ($animation-name, $prefixes) { 
+	@each $prefix in $prefixes { 
+		@if $prefix == webkit and $prefix-for-webkit == true { 
+			@-webkit-keyframes #{$animation-name}{
+				@content;
+			}
+		} 
+		@else if $prefix == moz and $prefix-for-mozilla == true { 
+			@-moz-keyframes #{$animation-name}{
+				@content;
+			} 
+		} 
+		@else if $prefix == ms and $prefix-for-microsoft == true { 
+			@-ms-keyframes #{$animation-name}{
+				@content;
+			} 
+		} 
+		@else if $prefix == o and $prefix-for-opera == true { 
+			@-o-keyframes #{$animation-name}{
+				@content;
+			}
+		} 
+		@else if $prefix == spec and $prefix-for-spec == true { 
+			@keyframes #{$animation-name}{
+				@content;
+			}
+		} 
+		@else { 
+			@warn "Unrecognized prefix: #{$prefix}"; 
+		} 
+	} 
+}
+
+// 外边距(margin)
+// -------------------------------------------------------------------
+@mixin fei-margin($top: 0, $right: 0, $bottom: 0, $left: 0){
+	margin:{
+		top: $top;
+		right: $right;
+		bottom: $bottom;
+		left: $left;
+	}
+}
+
+// 内边距(padding)
+// -------------------------------------------------------------------
+@mixin fei-padding($top: 0, $right: 0, $bottom: 0, $left: 0){
+	padding:{
+		top: $top;
+		right: $right;
+		bottom: $bottom;
+		left: $left;
+	}
+}
+
+// 定位(position)
+// -------------------------------------------------------------------
+@mixin fei-position($which: relative, $top: 0, $left: 0) {
+	position: $which;
+	top: $top;
+	left: $left;
+}
+
+// 字体(font)
+// -------------------------------------------------------------------
+@mixin fei-font($size: 12px, $family: '微软雅黑', $weight: normal) {
+	font:{
+		size: $size;
+		weight: $weight;
+		family: $family;
+	}
+}
+
+// 边框(border)
+// -------------------------------------------------------------------
+@mixin fei-border($direction: all, $weight: 1px, $style: solid, $color: #ededed, $radius: 0, $radiusdirection: all){
+	@if $direction == all {
+		@if $radiusdirection == all {
+			border: $weight $style $color;
+			border-radius: $radius;
+		} @else if $radiusdirection != all {
+			border: $weight $style $color;
+			@each $x in $radiusdirection{
+				border-#{$x}-radius:$radius;
+			}
+		}
+	} @else if $direction != all {
+		@if $radiusdirection == all {
+			@each $y in $direction{
+				border-#{$y}: $weight $style $color;
+			}
+			border-radius: $radius;
+		} @else if $radiusdirection != all {
+			@each $y in $direction{
+				border-#{$y}: $weight $style $color;
+			}
+			@each $x in $radiusdirection{
+				border-#{$x}-radius:$radius;
+			}
+		}
+	}
+}
+
+// 边框阴影(box-shadow)
+// 投影方式 X轴偏移量 Y轴偏移量 阴影模糊半径 阴影扩展半径 阴影颜色
+// 阴影类型：此参数是一个可选值，如果不设值，其默认的投影方式是外阴影；如果取其唯一值“inset”, 投影方式是内阴影
+// 阴影模糊半径：此参数是可选，但其值只能是为正值，如果其值为0时，表示阴影不具有模糊效果，其值越大阴影的边缘就越模糊
+// 阴影扩展半径：此参数可选，其值可以是正负值，如果值为正，则整个阴影都延展扩大，反之值为负值是，则缩小
+// -------------------------------------------------------------------
+@mixin fei-boxshadow($param: 3px 3px 3px 3px #ccc) {
+	@include fei-prefixer(box-shadow, $param, webkit moz ms o spec);
+}
+
+// 盒模型尺寸(border-box)
+// 默认值：content-box：
+// 元素的宽度/高度（width/height）等于元素边框宽度（border）加上元素内边距（padding）加上元素内容宽度/高度（content width/height）
+// 其他值：border-box：content width/height包含了元素的border,padding,内容的width/height
+// -------------------------------------------------------------------
+@mixin fei-boxsizing($type: border-box) {
+	@include fei-prefixer(box-sizing, $type, webkit moz ms o spec);
+}
+
+// 背景图裁剪区(background-clip)（背景可以覆盖到什么范围）
+// 默认值：border-box：背景被裁剪到边框盒
+// 其他值：padding-box：背景被裁剪到内边距框
+// 其他值：content-box：背景被裁剪到内容框
+// -------------------------------------------------------------------
+@mixin fei-backgroundclip($type: border-box) {
+	@include fei-prefixer(background-clip, $type, webkit moz ms o spec);
+}
+
+// 背景图绘制区(background-origin)（背景从什么位置开始）
+// 默认值：padding-box：背景图像相对于内边距框来定位
+// 其他值：border-box：背景图像相对于边框盒来定位
+// 其他值：content-box：背景图像相对于内容框来定位
+// -------------------------------------------------------------------
+@mixin fei-backgroundorigin($type: padding-box) {
+	@include fei-prefixer(background-origin, $type, webkit moz ms o spec);
+}
+
+// 过渡(transition)
+// -------------------------------------------------------------------
+@mixin fei-transition($property: background,       //规定应用过渡的 CSS 属性的名称
+					  $duration: 5s,               //定义过渡效果花费的时间。默认是 0
+					  $timing-function: ease,      //规定过渡效果的时间曲线。默认是 "ease"
+					  $delay: 1s) {                //规定过渡效果何时开始。默认是 0
+	@include fei-prefixer(transition, 
+						  $property $duration $timing-function $delay, 
+						  webkit moz ms o spec);
+}
+
+// 动画属性(animation)
+// -------------------------------------------------------------------
+@mixin fei-animation($name: myanimation,            //规定 @keyframes 动画的名称
+					 $duration: 5s,                 //规定动画完成一个周期所花费的秒或毫秒。默认是 0
+					 $timing-function: ease,        //规定动画的速度曲线。默认是 "ease"
+					 $delay: 1s,                    //规定动画何时开始。默认是 0
+					 $iteration-count: infinite,    //规定动画被播放的次数。默认是 1
+					 $direction: alternate,         //规定动画是否在下一周期逆向地播放。默认是 "normal"
+					 $play-state: running) {        //规定动画是否正在运行或暂停。默认是 "running"
+	@include fei-prefixer(animation, 
+						  $name $duration $timing-function $delay $iteration-count $direction $play-state, 
+						  webkit moz ms o spec);
+}
+
+// 动画(keyframes)
+// -------------------------------------------------------------------
+@mixin fei-keyframes($animation-name) {
+	@include fei-prefixer-for-keyframes($animation-name, webkit moz ms o spec) {
+		@content;
+	};
+}
+
+// 3D转换(transform)
+// translate3d(x,y,z)	    定义 3D 转化(位置移动)
+// translateX(x)	        定义 3D 转化，仅使用用于 X 轴的值
+// translateY(y)	        定义 3D 转化，仅使用用于 Y 轴的值
+// translateZ(z)	        定义 3D 转化，仅使用用于 Z 轴的值
+// scale3d(x,y,z)	        定义 3D 缩放转换
+// scaleX(x)	            定义 3D 缩放转换，通过给定一个 X 轴的值
+// scaleY(y)	            定义 3D 缩放转换，通过给定一个 Y 轴的值
+// scaleZ(z)	            定义 3D 缩放转换，通过给定一个 Z 轴的值
+// rotate3d(x,y,z,angle)	定义 3D 旋转
+// rotateX(angle)	        定义沿 X 轴的 3D 旋转
+// rotateY(angle)	        定义沿 Y 轴的 3D 旋转
+// rotateZ(angle)	        定义沿 Z 轴的 3D 旋转
+// perspective(n)	        定义 3D 转换元素的透视视图
+// 2D转换(transform)
+// translate(x,y)	        定义 2D 转化(位置移动)
+// scale(x,y)	            定义 2D 缩放转换
+// rotate(deg)	            定义 2D 旋转
+// skew(x,y)	            定义 2D 旋转
+@mixin fei-transform($param) {
+	@include fei-prefixer(transform, $param, webkit moz ms o spec);
+}
+
+// 渐变(gradients)
+// 线性渐变（Linear Gradients）- 向下(bottom)/向上(top)/向左(left)/向右(right)/对角方向(left top)/角度(deg)
+// linear-gradient(direction, color-stop1, color-stop2, ...);
+// 径向渐变（Radial Gradients）- 由它们的中心定义
+// radial-gradient(center, shape size, start-color percent, ..., last-color percent);(颜色后面的百分比不设置则是均匀分布，center默认为中心可以用百分比设置位置)
+// 重复渐变repeating-linear-gradient、repeating-radial-gradient
+// -------------------------------------------------------------------
+@mixin fei-gradient($property, $param) {
+	@include fei-prefixer-for-special($property, $param, webkit moz ms o spec);
+}
+
+// 多列
+// -------------------------------------------------------------------
+@mixin fei-column() {
+
+}
+
+// (table)表格边框设置
+// 边框合并，单元格间距为零
+// -------------------------------------------------------------------
+%fei-table{
+	border-collapse:collapse;//separate
+	border-spacing: 0;
+}
+// ========================================================================================================================

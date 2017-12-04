@@ -1,0 +1,62 @@
+@import "basic.scss";
+
+.border-test{
+	@include fei-border();
+}
+.padding-test{
+	@include fei-padding();
+}
+.margin-test{
+	@include fei-margin();
+}
+.position-test{
+	@include fei-position();
+}
+.font-test{
+	@include fei-font();
+}
+.boxshadow-test{
+	@include fei-boxshadow();
+}
+.boxsizing-test{
+	@include fei-boxsizing();
+}
+.backgroundclip-test{
+	@include fei-backgroundclip();
+}
+.backgroundorigin-test{
+	@include fei-backgroundorigin();
+}
+.table-test{
+	@extend %fei-table;
+}
+.transition-test{
+	@include fei-transition();
+}
+.animation-test{
+	@include fei-animation();
+}
+.keyframes-test{
+	@include fei-keyframes($animation-name: myanimation) {
+		0%   {background: red; left:0px; top:0px;}
+		25%  {background: yellow; left:200px; top:0px;}
+		50%  {background: blue; left:200px; top:200px;}
+		75%  {background: green; left:0px; top:200px;}
+		100% {background: red; left:0px; top:0px;}
+	}
+}
+.transform-translate-test{
+	@include fei-transform(translate(50px,100px));
+}
+.transform-rotate-test{
+	@include fei-transform(rotate(30deg));
+}
+.transform-scale-test{
+	@include fei-transform(scale(2,4));
+}
+.transform-skew-test{
+	@include fei-transform(skew(30deg,20deg));
+}
+.line-gradient-test{
+	@include fei-gradient(background, linear-gradient(deg30, red, yellow, blue));
+}
